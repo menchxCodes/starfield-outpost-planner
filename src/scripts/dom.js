@@ -4,6 +4,7 @@ import { compounds } from "./compounds";
 import { exotics } from "./exotics";
 import { uniques } from "./uniques";
 import { building } from "./uniques";
+import { todo } from "./todo";
 
 const dom = (function () {
   const container = document.createElement("div");
@@ -23,9 +24,13 @@ const dom = (function () {
     searchBar.classList.add("search-bar");
     searchBar.placeholder = "search...";
 
+    const todoContainer = document.createElement("div");
+    todoContainer.classList.add("todo-container");
+
     container.appendChild(title);
     container.appendChild(searchBar);
     container.appendChild(content);
+    container.appendChild(todoContainer);
     document.body.appendChild(container);
   };
 
@@ -43,7 +48,6 @@ const dom = (function () {
           card.classList.remove("hide");
           shownCards.push(card);
         }
-        console.log(shownCards);
       });
       if (shownCards[0] !== undefined) {
         shownCards[0].classList.add("selected");
@@ -51,7 +55,7 @@ const dom = (function () {
     });
   };
 
-  const createCards = (inputArrays) => {
+  const renderResources = (inputArrays) => {
     const crafts = inputArrays;
 
     const recipeContainer = document.createElement("div");
@@ -185,6 +189,27 @@ const dom = (function () {
 
     craftContainer.appendChild(label);
     craftContainer.appendChild(content);
+
+    const btn = document.querySelector(".craft-add-btn");
+    const addBtn = document.createElement("button");
+    addBtn.classList.add("craft-add-btn");
+    addBtn.textContent = "Add";
+
+    if (btn) {
+      recipeContainer.replaceChild(addBtn, btn);
+    } else {
+      recipeContainer.prepend(addBtn);
+    }
+
+    addBtn.addEventListener("click", () => {
+      hookAddBtnEvent(craft);
+    });
+  };
+
+  const hookAddBtnEvent = (item) => {
+    const quantity = document.querySelector(".craft-quantity");
+    todo.add(item, quantity.value * 1);
+    renderTodo();
   };
 
   const hookQuantityEvent = (input) => {
@@ -201,14 +226,11 @@ const dom = (function () {
   const hookKeyboardNavigation = () => {
     const searchBar = document.querySelector(".search-bar");
     window.addEventListener("keydown", (e) => {
-      console.log(e.code);
-      console.log(document.activeElement);
-
       const input = document.querySelector(".craft-quantity");
       const cards = Array.from(
         document.querySelectorAll(".resource-card:not(.hide)")
       );
-      console.log(cards);
+
       let selected = cards.find((div) => {
         return div.classList.contains("selected");
       });
@@ -226,7 +248,6 @@ const dom = (function () {
           document.activeElement.classList.contains("craft-quantity")
         ) {
           if (e.code === "ArrowUp") {
-            console.log("empty up");
             e.preventDefault();
             searchBar.focus();
             searchBar.select();
@@ -237,7 +258,6 @@ const dom = (function () {
           document.activeElement.classList.contains("search-bar")
         ) {
           if (e.code === "ArrowDown") {
-            console.log("empty down");
             e.preventDefault();
             input.focus();
             input.select();
@@ -245,14 +265,12 @@ const dom = (function () {
         }
       } else if (document.activeElement.classList.contains("craft-quantity")) {
         if (e.code === "ArrowUp") {
-          console.log("input-up");
           e.preventDefault();
           searchBar.focus();
           searchBar.select();
         }
 
         if (e.code === "ArrowLeft" || e.code === "ArrowDown") {
-          console.log(selected);
           e.preventDefault();
           selected.focus();
         }
@@ -292,15 +310,148 @@ const dom = (function () {
     });
   };
 
-  setupLayout();
   const render = (input, pageTitle = "All") => {
+    setupLayout();
     const title = document.querySelector(".page-title");
     title.textContent = pageTitle;
-    createCards(input);
+    renderResources(input);
     // hookQuantityEvent();
     hookKeyboardNavigation();
     hookSearchEvent();
   };
+
+  const createTodoDiv = (craft) => {
+    const todoGroup = document.createElement("div");
+    const todoName = document.createElement("div");
+    const todoAmount = document.createElement("div");
+
+    todoGroup.classList.add("todo");
+    todoName.classList.add("todo-name");
+    todoAmount.classList.add("todo-amount");
+
+    todoName.textContent = craft.item.name;
+    todoAmount.textContent = craft.amount;
+
+    todoGroup.appendChild(todoName);
+    todoGroup.appendChild(todoAmount);
+
+    return todoGroup;
+  };
+
+  const renderIngredient = (ingredient, quantity) => {
+    const breakdownGroup = document.createElement("div");
+    const breakdownName = document.createElement("div");
+    const breakdownAmount = document.createElement("div");
+
+    breakdownGroup.classList.add("breakdown");
+    breakdownName.classList.add("breakdown-name");
+    breakdownAmount.classList.add("breakdown-amount");
+
+    breakdownName.textContent = ingredient.item.name;
+    breakdownAmount.textContent = ingredient.amount * quantity;
+
+    breakdownGroup.appendChild(breakdownName);
+    breakdownGroup.appendChild(breakdownAmount);
+
+    return breakdownGroup;
+  };
+
+  const renderTodo = () => {
+    console.log("render todo");
+    const todoContainer = document.querySelector(".todo-container");
+
+    todoContainer.replaceChildren("");
+
+    todo.all.forEach((item) => {
+      const todoGroup = createTodoDiv(item);
+      todoContainer.appendChild(todoGroup);
+
+      const breakdownContainer = document.createElement("div");
+      breakdownContainer.classList.add("breakdown-container");
+      breakdownContainer.classList.add("hide");
+
+      todoGroup.after(breakdownContainer);
+
+      todoGroup.addEventListener("click", () => {
+        breakdownContainer.classList.toggle("hide");
+      });
+      const quantity = item.amount;
+
+      item.item.ingredients.forEach((ingredient) => {
+        const breakdownGroup = renderIngredient(ingredient, quantity);
+
+        breakdownContainer.appendChild(breakdownGroup);
+      });
+    });
+    const totalDiv = updateTotalDiv();
+
+    todoContainer.appendChild(totalDiv);
+  };
+  const updateTotalDiv = () => {
+    const totalContainer = document.createElement("div");
+
+    totalContainer.classList.add("todo-total-container");
+
+    const consolidated = updateTotal();
+    consolidated.sort((a, b) => {
+      if (a.item.name > b.item.name) {
+        return 1;
+      }
+      if (a.item.name < b.item.name) {
+        return -1;
+      }
+      return 0;
+    });
+
+    consolidated.forEach((item) => {
+      const totalDiv = document.createElement("div");
+      const totalName = document.createElement("div");
+      const totalAmount = document.createElement("div");
+
+      totalName.classList.add("todo-total-name");
+      totalAmount.classList.add("todo-total-amount");
+      totalDiv.classList.add("todo-total");
+
+      totalName.textContent = item.item.name;
+      totalAmount.textContent = item.amount;
+      totalDiv.appendChild(totalName);
+      totalDiv.appendChild(totalAmount);
+      totalContainer.appendChild(totalDiv);
+    });
+    return totalContainer;
+  };
+  const updateTotal = () => {
+    const allResources = [];
+
+    todo.all.forEach((item) => {
+      const brokenDown = item.item.breakdown();
+      brokenDown.forEach((brokenItem) => {
+        brokenItem.amount *= item.amount;
+      });
+      allResources.push(brokenDown);
+    });
+
+    const reduced = allResources.flat().reduce((itemGroup, item) => {
+      const name = item.item.name;
+      if (itemGroup[name] == null) {
+        itemGroup[name] = 0;
+      }
+      itemGroup[name] += item.amount;
+      return itemGroup;
+    }, {});
+
+    const array = Object.entries(reduced);
+    const output = [];
+    array.forEach((element) => {
+      const obj = {};
+      obj.item = resources.findByName(element[0]);
+      obj.amount = element[1];
+      output.push(obj);
+    });
+
+    return output;
+  };
+
   return { render };
 })();
 

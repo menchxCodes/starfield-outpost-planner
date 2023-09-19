@@ -22,7 +22,7 @@ input[type="number"] {
 
 .resource-container {
   display: grid;
-  grid-template-columns: 300px 2fr 1fr;
+  grid-template-columns: 300px 1fr 1fr;
   gap: 0.5em;
 }
 
@@ -84,15 +84,69 @@ input[type="number"] {
 }
 
 .recipe-container {
+  grid-column: 2/3;
+  grid-row: 2/3;
+
   display: flex;
   flex-direction: column;
   gap: 1em;
   align-self: baseline;
+  justify-self: center;
 
   position: sticky;
   top: 100px;
 }
 
+.recipe-container > * {
+}
+
+.todo-container {
+  grid-column: 3/4;
+  grid-row: 2/3;
+  align-self: baseline;
+  justify-self: center;
+
+  text-transform: uppercase;
+  font-size: 20px;
+  background-color: #fff;
+}
+
+.todo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+.todo-total-container {
+  background-color: rgb(206, 206, 206);
+}
+
+.todo-total-container::before {
+  content: "Total Breakdown:";
+  font-weight: bold;
+}
+
+.todo-total {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+.breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-left: 100px;
+  gap: 1em;
+
+  background-color: rgb(173, 172, 172);
+
+  justify-content: baseline;
+  align-items: baseline;
+}
+
+.break-down > * {
+  flex: 1 1 100%;
+}
 .search-bar {
   position: sticky;
   top: 1em;
@@ -151,6 +205,17 @@ input[type="number"] {
 .details-amount::before {
   content: "x";
   text-transform: lowercase;
+}
+
+.craft-add-btn {
+  padding: 0.5em 1em;
+  align-self: start;
+
+  border-radius: 10px;
+
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .show {
