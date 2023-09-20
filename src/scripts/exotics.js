@@ -19,12 +19,12 @@ class Exotic {
     exotics.all.push(this);
   }
 
-  static cost(ingredientsArray) {
+  static cost(ingredientsArray, quantity = 1) {
     const costs = [];
     ingredientsArray.forEach((ingredient) => {
       const obj = {};
       obj.item = ingredient[0];
-      obj.amount = ingredient[1];
+      obj.amount = ingredient[1] * quantity;
       costs.push(obj);
     });
     return costs;
@@ -53,16 +53,12 @@ class Exotic {
       }
 
       if (ingredient.item.type === "compound") {
-        // console.log(`compound ${ingredient.item.name} was broken down into:`);
         ingredient.item.breakdown().forEach((resource) => {
           obj = {};
           obj.item = resource.item;
           obj.amount = resource.amount * ingredient.amount * quantity;
           obj.parent = ingredient.item.name;
           costs.push(obj);
-          // console.log(
-          //   `${obj.item.name} x${obj.amount} (${ingredient.item.name})`
-          // );
         });
       }
     });

@@ -161,6 +161,7 @@ const dom = (function () {
       const detailsIngredient = document.createElement("div");
       detailsIngredient.classList.add("details-ingredient");
       detailsIngredient.textContent = item.item.name;
+      // console.log(item);
       if (item.parent) {
         detailsIngredient.textContent += ` (${item.parent})`;
       }

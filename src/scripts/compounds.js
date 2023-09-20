@@ -18,12 +18,12 @@ class Compound {
     compounds.all.push(this);
   }
 
-  static cost(ingredientsArray) {
+  static cost(ingredientsArray, quantity = 1) {
     const costs = [];
     ingredientsArray.forEach((ingredient) => {
       const obj = {};
       obj.item = ingredient[0];
-      obj.amount = ingredient[1];
+      obj.amount = ingredient[1] * quantity;
       costs.push(obj);
     });
     return costs;

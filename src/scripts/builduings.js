@@ -122,6 +122,7 @@ const chlorine = resources.findByName("chlorine");
 const fiber = resources.findByName("fiber");
 const adhesive = resources.findByName("adhesive");
 const cosmetic = resources.findByName("cosmetic");
+const vanadium = resources.findByName("vanadium");
 
 const adaptiveFrame = recipes.findByName("adaptive frame");
 const zeroWire = recipes.findByName("zero wire");
@@ -136,7 +137,29 @@ const austenticManifold = compounds.findByName("austentic manifold");
 const semimetalWafer = compounds.findByName("semimetal wafer");
 const commRelay = compounds.findByName("comm relay");
 const paramagnonConductor = compounds.findByName("paramagnon conductor");
+const molecularSieve = compounds.findByName("molecular sieve");
 
+const aldumiteDrillingRig = uniques.findByName("aldumite drilling rig");
+
+const extractorChlorineMk1 = new Building(
+  "extractor chlorine mk1",
+  "building",
+  [
+    [aluminum, 5],
+    [nickel, 4],
+    [copper, 3],
+  ]
+);
+const extractorChlorineMk2 = new Building(
+  "extractor chlorine mk2",
+  "building",
+  [
+    [adaptiveFrame, 3],
+    [molecularSieve, 2],
+    [vanadium, 4],
+    [reactiveGauge, 2],
+  ]
+);
 const extractorLiquidMk1 = new Building("extractor liquid mk1", "building", [
   [benzene, 1],
   [membrane, 4],
@@ -160,6 +183,13 @@ const extractorSolidMk2 = new Building("extractor solid mk2", "building", [
   [drillingRig, 1],
   [tungsten, 4],
   [adaptiveFrame, 3],
+]);
+
+const extractorSolidMk3 = new Building("extractor solid mk3", "building", [
+  [isotopicCoolant, 4],
+  [aldumiteDrillingRig, 1],
+  [tungsten, 6],
+  [adaptiveFrame, 5],
 ]);
 
 const extractorGasMk1 = new Building("extractor gas mk1", "building", [
@@ -227,9 +257,9 @@ const industrialWallLight = new Building("industrial wall light", "building", [
 ]);
 
 const transferContainer = new Building("transfer container", "building", [
-  [tungsten, 1],
-  [iron, 1],
-  [lubricant, 1],
+  [tungsten, 5],
+  [iron, 8],
+  [lubricant, 4],
 ]);
 
 const storageSolidSmall = new Building("storage - solid", "building", [
@@ -248,6 +278,12 @@ const storageSolidMedium = new Building(
   ]
 );
 
+const storageSolidLarge = new Building("storage - solid - large", "building", [
+  [iron, 20],
+  [adaptiveFrame, 10],
+  [aluminum, 16],
+]);
+
 const storageLiquidSmall = new Building("storage - liquid", "building", [
   [nickel, 5],
   [adaptiveFrame, 3],
@@ -264,6 +300,16 @@ const storageLiquidMedium = new Building(
   ]
 );
 
+const storageLiquidLarge = new Building(
+  "storage - liquid - large",
+  "building",
+  [
+    [nickel, 16],
+    [adaptiveFrame, 10],
+    [aluminum, 20],
+  ]
+);
+
 const storageGasSmall = new Building("storage - gas", "building", [
   [tungsten, 5],
   [adaptiveFrame, 3],
@@ -276,6 +322,12 @@ const storageGasMedium = new Building("storage - gas - medium", "building", [
   [copper, 10],
 ]);
 
+const storageGasLarge = new Building("storage - gas - large", "building", [
+  [tungsten, 16],
+  [adaptiveFrame, 10],
+  [copper, 20],
+]);
+
 const warehouseSmall = new Building("warehouse - small", "building", [
   [adaptiveFrame, 3],
   [titanium, 5],
@@ -286,6 +338,12 @@ const warehouseMedium = new Building("warehouse - medium", "building", [
   [adaptiveFrame, 5],
   [titanium, 8],
   [aluminum, 10],
+]);
+
+const warehouseLarge = new Building("warehouse - large", "building", [
+  [adaptiveFrame, 10],
+  [titanium, 16],
+  [aluminum, 20],
 ]);
 
 const simpleFabricator = new Building("simple fabricator", "building", [

@@ -22,6 +22,11 @@ const input = buildings.all.concat(
   uniques.all
 );
 
-console.log(buildings);
+console.log(uniques.all[3]);
+const adas = uniques.all[3];
+console.log(adas.bd());
 
 dom.render(input);
+
+// const array = [1, 2, 3, 4];
+// console.log(array.splice(2, 1), array);

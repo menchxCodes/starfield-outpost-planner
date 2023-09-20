@@ -20,12 +20,12 @@ class Unique {
     uniques.all.push(this);
   }
 
-  static cost(ingredientsArray) {
+  static cost(ingredientsArray, quantity = 1) {
     const costs = [];
     ingredientsArray.forEach((ingredient) => {
       const obj = {};
       obj.item = ingredient[0];
-      obj.amount = ingredient[1];
+      obj.amount = ingredient[1] * quantity;
       costs.push(obj);
     });
     return costs;
@@ -40,7 +40,6 @@ class Unique {
         obj.item = ingredient.item;
         obj.amount = ingredient.amount * quantity;
         costs.push(obj);
-        // console.log(`${obj.item.name} x${obj.amount}`);
       }
 
       if (ingredient.item.type === "recipe") {
@@ -99,6 +98,63 @@ class Unique {
 
     return output;
   }
+
+  con(itemsArray) {
+    const costs = JSON.parse(JSON.stringify(itemsArray));
+
+    const reduced = costs.reduce((itemGroup, item) => {
+      const name = item.item.name;
+      if (itemGroup[name] == null) {
+        itemGroup[name] = 0;
+      }
+      itemGroup[name] += item.amount;
+      return itemGroup;
+    }, {});
+
+    const array = Object.entries(reduced);
+    const output = [];
+    array.forEach((element) => {
+      const obj = {};
+      obj.item = resources.findByName(element[0]);
+      obj.amount = element[1];
+      output.push(obj);
+    });
+
+    return output;
+  }
+
+  bd() {
+    const array = [];
+    const output = JSON.parse(JSON.stringify(this.ingredients));
+    console.log(JSON.parse(JSON.stringify(this.ingredients)));
+    console.log(this.ingredients);
+    const result = [];
+    array.shift();
+    while (!output.every((element) => element.item.type === "resource")) {
+      console.log(output.every((element) => element.item.type === "resource"));
+
+      output.forEach((ingredient, index) => {
+        console.log({ ingredient });
+
+        if (ingredient.item.type === "resource") {
+          result.push(ingredient);
+        } else {
+          ingredient.item.ingredients.forEach((subIngredient) => {
+            subIngredient.amount *= ingredient.amount;
+            output.push(subIngredient);
+          });
+        }
+        output.splice(index, 1);
+        console.log(JSON.parse(JSON.stringify(output)));
+      });
+    }
+
+    output.forEach((element) => {
+      result.push(element);
+    });
+    const consolidated = this.con(result);
+    return { result, consolidated };
+  }
 }
 
 const indicite = resources.findByName("indicite");
@@ -125,7 +181,7 @@ const microsendRegulator = exotics.findByName("microsend regulator");
 const sterileNanotubes = exotics.findByName("sterile nanotubes");
 const nuclearFuelRod = exotics.findByName("nuclear fuel rod");
 
-const aldumiteDrillingRig = new Unique("aldumite drilling-rig", "unique", [
+const aldumiteDrillingRig = new Unique("aldumite drilling rig", "unique", [
   [microsendRegulator, 1],
   [aldumite, 4],
   [drillingRig, 1],
