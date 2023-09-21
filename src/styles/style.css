@@ -9,9 +9,32 @@
   --text-color: #26a8be;
 }
 
+::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(37, 164, 186, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 100vw;
+}
+
 body {
+  display: flex;
+  justify-content: center;
   background-color: var(--dark-background-color);
   color: var(--text-color);
+}
+
+.page-wrapper,
+.total-wrapper,
+.crafts-wrapper,
+.breakdown-wrapper {
+  height: 93vh;
+  scrollbar-gutter: stable both-edges;
 }
 
 body,
@@ -45,7 +68,7 @@ button {
   align-self: start;
 
   padding: 0.5em 1em;
-  margin-inline: 1em;
+  margin-inline: 0em;
 
   border-radius: 15px;
 
@@ -55,16 +78,15 @@ button {
 .crafts-wrapper {
   grid-column: 1/2;
   grid-row: 1/3;
-  align-self: start;
-
-  height: 98vh;
+  align-self: end;
 
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(22, 1fr);
   gap: 5px;
   align-items: start;
-
+  padding-top: 1em;
+  padding-right: 1em;
   overflow-y: scroll;
   overflow-x: hidden;
 
@@ -75,7 +97,7 @@ button {
 }
 
 .craft-container {
-  padding: 0.5em 1em;
+  padding: 0.5em 0.5em;
 
   cursor: pointer;
 }
@@ -96,7 +118,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: start;
-  align-self: start;
+  align-self: stretch;
 
   padding: 1em;
   background-color: var(--light-background-color);
@@ -142,6 +164,9 @@ button {
 .todo-wrapper {
   grid-row: 2/3;
   grid-column: 2/3;
+
+  align-self: end;
+  justify-self: normal;
 }
 
 .breakdown-wrapper {
@@ -150,8 +175,6 @@ button {
 
   overflow-y: scroll;
   padding: 1em;
-
-  /* height: 97vh; */
 }
 
 .breakdown-container {
@@ -218,10 +241,9 @@ button {
 
   overflow-y: scroll;
   align-self: start;
+  height: calc(84 * 2 / 3 * 1vh);
 
   padding: 1em;
-
-  max-height: calc((97 / 2) * 1vh);
 }
 
 .todo-container {
@@ -238,7 +260,6 @@ button {
   grid-area: 1 / 5 / 3 / 6;
 
   overflow-y: scroll;
-  max-height: 97vh;
 
   padding: 1em;
 }
