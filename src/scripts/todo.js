@@ -1,60 +1,52 @@
-import { recipes } from "./recipes";
-import { resources } from "./resource";
-import { compounds } from "./compounds";
-import { exotics } from "./exotics";
-import { uniques } from "./uniques";
-
 class Todo {
   constructor() {
     this.all = [];
   }
 
-  add(item, quantity) {
-    const current = this.all.find(
-      (listItem) => listItem.item.name === item.name
-    );
+  findByName(name) {
+    return this.all.find((item) => item.item.name === name);
+  }
 
-    if (current !== undefined) {
-      current.amount += quantity;
+  addToList(craft, quantity = 1) {
+    const item = this.findByName(craft.name);
+
+    if (item) {
+      item.amount += 1 * quantity;
     } else {
-      this.all.push({ item, amount: 1 * quantity });
+      const obj = {};
+      obj.item = craft;
+      obj.amount = 1 * quantity;
+      this.all.unshift(obj);
     }
   }
 
-  breakdown() {
-    const output = [];
-    this.all.forEach((item) => {
-      if (item.item.type !== "resource") {
-        const result = item.item.breakdown();
-        output.push(result);
-      }
-    });
-    return output;
+  deleteItemByName(itemName) {
+    const item = this.findByName(itemName);
+
+    this.all.splice(this.all.indexOf(item), 1);
   }
 
-  consolidate() {
-    const costs = this.breakdown();
-    console.log(costs);
+  deleteItem(item) {
+    this.all.splice(this.all.indexOf(item), 1);
+  }
 
-    const reduced = costs.reduce((itemGroup, item) => {
-      const name = item.item.name;
-      if (itemGroup[name] == null) {
-        itemGroup[name] = 0;
-      }
-      itemGroup[name] += item.amount;
-      return itemGroup;
-    }, {});
+  increaseQuantity(craft, quantity = 1) {
+    const item = this.findByName(craft);
+    item.amount += 1 * quantity;
+    // console.log(craft, item);
+  }
 
-    const array = Object.entries(reduced);
-    const output = [];
-    array.forEach((element) => {
-      const obj = {};
-      obj.item = resources.findByName(element[0]);
-      obj.amount = element[1];
-      output.push(obj);
-    });
+  decreaseQuantity(craft, quantity = 1) {
+    const item = this.findByName(craft);
+    if (item.amount >= 2) {
+      item.amount -= 1 * quantity;
+    } else {
+    }
+    // console.log(craft, item);
+  }
 
-    return output;
+  clearList() {
+    this.all = [];
   }
 }
 
