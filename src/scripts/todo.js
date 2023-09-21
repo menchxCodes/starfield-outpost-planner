@@ -7,6 +7,10 @@ class Todo {
     return this.all.find((item) => item.item.name === name);
   }
 
+  save() {
+    localStorage.setItem("localTodo", JSON.stringify(this.all));
+  }
+
   addToList(craft, quantity = 1) {
     const item = this.findByName(craft.name);
 
@@ -18,35 +22,40 @@ class Todo {
       obj.amount = 1 * quantity;
       this.all.unshift(obj);
     }
+    this.save();
   }
 
   deleteItemByName(itemName) {
     const item = this.findByName(itemName);
 
     this.all.splice(this.all.indexOf(item), 1);
+    this.save();
   }
 
   deleteItem(item) {
     this.all.splice(this.all.indexOf(item), 1);
+    this.save();
   }
 
   increaseQuantity(craft, quantity = 1) {
     const item = this.findByName(craft);
     item.amount += 1 * quantity;
     // console.log(craft, item);
+    this.save();
   }
 
   decreaseQuantity(craft, quantity = 1) {
     const item = this.findByName(craft);
     if (item.amount >= 2) {
       item.amount -= 1 * quantity;
+      this.save();
     } else {
     }
-    // console.log(craft, item);
   }
 
   clearList() {
     this.all = [];
+    this.save();
   }
 }
 

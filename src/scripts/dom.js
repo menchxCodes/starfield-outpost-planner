@@ -257,7 +257,6 @@ const dom = (function () {
     todoWrapper.appendChild(todoTitle);
     todoWrapper.appendChild(clearListBtn);
     todoWrapper.appendChild(todoContainer);
-    // showTodo();
   };
 
   const createBreakdown = () => {
@@ -581,6 +580,8 @@ const dom = (function () {
     createBreakdown();
     createTodo();
     createTotal();
+    showTodo();
+    showBreakdown();
     hookKeyboardNavigation();
     hookSearchEvent();
     // console.log("render");
